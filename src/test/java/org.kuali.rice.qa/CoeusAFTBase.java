@@ -15,47 +15,22 @@
  */
 package org.kuali.rice.qa;
 
-import org.kuali.rice.testtools.selenium.WebDriverLegacyITBase;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.util.concurrent.TimeUnit;
-import java.util.Date;
-import java.io.File;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.interactions.Actions;
+import org.kuali.rice.testtools.selenium.WebDriverLegacyITBase;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.*;
-import static org.openqa.selenium.OutputType.*;
 
 /**
  * This class //TODO ...
  *
  * @author Kuali Rice Team (rice.collab@kuali.org)
  */
-public class CoeusProposalSubmissionAFT  extends WebDriverLegacyITBase {
+public abstract class CoeusAFTBase extends WebDriverLegacyITBase {
 
-    @Override
-    protected String getBookmarkUrl() {
-        return "http://test.kc.kuali.org/kc-trunk/kc-pd-krad/proposalDevelopment";
-    }
 
-    FirefoxDriver wd;
-
-    @Before
-    public void setUp() throws Exception {
-        wd = new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-    }
-
-     **/
-
-    @Test
-    public void testCoeusProposalSubmission() {
+    protected void loginToCoeus() throws Exception {
         driver.get("http://test.kc.kuali.org/kc-trunk/kr-login/login?viewId=DummyLoginView&returnLocation=%2Fkc-krad%2FlandingPage");
         if (!driver.findElement(By.id("Rice-UserName_control")).getAttribute("value").equals("")) {
             System.out.println("verifyElementValue failed");
@@ -64,6 +39,40 @@ public class CoeusProposalSubmissionAFT  extends WebDriverLegacyITBase {
         driver.findElement(By.id("Rice-UserName_control")).clear();
         driver.findElement(By.id("Rice-UserName_control")).sendKeys("quickstart");
         driver.findElement(By.id("Rice-LoginButton")).click();
+    }
+
+    protected void createNewProposal() throws Exception {
+        driver.findElement(By.linkText("RESEARCHER")).click();
+        driver.findElement(By.id("u1fvw5sj")).click();
+        if (!driver.findElement(By.xpath("//div[@id='uk9itqu']/select//option[3]")).isSelected()) {
+            driver.findElement(By.xpath("//div[@id='uk9itqu']/select//option[3]")).click();
+        }
+        if (!driver.findElement(By.xpath("//div[@id='uk9itrp']/select//option[2]")).isSelected()) {
+            driver.findElement(By.xpath("//div[@id='uk9itrp']/select//option[2]")).click();
+        }
+        if (!driver.findElement(By.xpath("//div[@id='uk9itsk']/select//option[6]")).isSelected()) {
+            driver.findElement(By.xpath("//div[@id='uk9itsk']/select//option[6]")).click();
+        }
+        waitAndTypeByName("document.developmentProposal.requestedStartDateInitial","12/05/14");
+//        driver.findElement(By.id("u1vekua8_control")).click();
+//        driver.findElement(By.linkText("6")).click();
+        driver.findElement(By.id("u1vekub3_control")).click();
+        driver.findElement(By.linkText("Next")).click();
+        driver.findElement(By.linkText("Next")).click();
+        driver.findElement(By.linkText("Next")).click();
+        driver.findElement(By.linkText("14")).click();
+        driver.findElement(By.id("uk9itua_control")).click();
+        driver.findElement(By.id("uk9itua_control")).clear();
+        driver.findElement(By.id("uk9itua_control")).sendKeys("test project");
+        driver.findElement(By.id("uk9itv5_control")).click();
+        driver.findElement(By.id("uk9itv5_control")).clear();
+        driver.findElement(By.id("uk9itv5_control")).sendKeys("002020");
+        driver.findElement(By.id("ui-id-2")).click();
+        driver.findElement(By.id("ufuknm4")).click();
+    }
+/**
+    @Test
+    public void testCoeusProposalSubmission() {
         driver.findElement(By.linkText("RESEARCHER")).click();
         driver.findElement(By.id("u1fvw5sj")).click();
         if (!driver.findElement(By.xpath("//div[@id='uk9itqu']/select//option[3]")).isSelected()) {
@@ -306,41 +315,6 @@ public class CoeusProposalSubmissionAFT  extends WebDriverLegacyITBase {
         driver.findElement(By.id("uj31ctp")).click();
         driver.findElement(By.id("u2ufdnb")).click();
     }
+**/
 
-
-    public void loginSuccessfully() {
-
-    }
-
-    public void navigateToNewProposal() {
-
-    }
-
-    public void completeInitialProposalDetailsSuccessfully(){
-
-    }
-
-    public void completeProposalAddNewPresenter() {
-
-    }
-
-    public void completeProposalAddNew() {
-
-    }
-
-
-
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-
-    public static boolean isAlertPresent(FirefoxDriver wd) {
-        try {
-            //driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
 }
