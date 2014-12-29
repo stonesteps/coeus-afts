@@ -25,9 +25,13 @@
   <version>6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <stests.includes>**/*AFT.java</stests.includes>
+    <stests.skip>false</stests.skip>
+  </properties>
 
     <build>
-        <testSourceDirectory>src/it/java</testSourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -57,14 +61,14 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.2.1.v20140609</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
             </plugin>
-
-
         </plugins>
     </build>
 
@@ -73,9 +77,110 @@
             <groupId>org.kuali.rice</groupId>
             <artifactId>rice-tools-test</artifactId>
             <version>2.5.1-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
+
+
+  <profiles>
+  <profile>
+    <id>stests</id>
+    <properties>
+      <maven.failsafe.skip>${stests.skip}</maven.failsafe.skip>
+      <maven.failsafe.includes>${stests.includes}</maven.failsafe.includes>
+      <maven.failsafe.includes.file>classpath:org.kuali.rice.qa.CoeusProposalSubmissionAFT.java</maven.failsafe.includes.file>
+      <maven.failsafe.excludes>${stests.excludes}</maven.failsafe.excludes>
+      <maven.failsafe.excludes.file>${stests.excludes.file}</maven.failsafe.excludes.file>
+      <maven.failsafe.forkedProcessTimeoutInSeconds>${stests.failsafe.timeout}</maven.failsafe.forkedProcessTimeoutInSeconds>
+    </properties>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/META-INF/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>XML/*.*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/META-INF/*.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>selenium-maven-plugin</artifactId>
+          <version>2.3</version>
+          <executions>
+            <!--
+              <execution>
+              <id>xvfb</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+              <goal>xvfb</goal>
+              </goals>
+              </execution>
+            -->
+            <execution>
+              <id>start-selenium-server</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>start-server</goal>
+              </goals>
+              <configuration>
+                <background>true</background>
+                <logOutput>true</logOutput>
+              </configuration>
+            </execution>
+            <execution>
+              <id>stop-selenium-server</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop-server</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.18</version>
+          <executions>
+            <execution>
+              <id>integration-test</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>9.2.1.v20140609</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat7-maven-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+
+</profiles>
+
 
 </project>
