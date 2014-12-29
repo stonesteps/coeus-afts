@@ -42,7 +42,7 @@ public class CoeusProposalSubmissionAFT  extends CoeusAFTBase {
 
     @Override
     protected String getBookmarkUrl() {
-        return "http://test.kc.kuali.org/kc-trunk/kc-pd-krad/proposalDevelopment";
+        return "http://test.kc.kuali.org/kc-trunk/kc-krad/landingPage?methodToCall=start";
     }
 
     @Override
@@ -155,16 +155,51 @@ public class CoeusProposalSubmissionAFT  extends CoeusAFTBase {
         driver.findElement(By.id("u2ufdnb")).click();
     }
 
+    /**
+     * Exercises KC Proposal Development screens for performance analysis purposes.
+     * Repeat the following steps 3 times.
+     *
+     * Steps:
+     * http://test.kc.kuali.org/kc-trunk/kc-krad/landingPage?methodToCall=start
+     * 1) Top header: Researcher->Create Proposal. Fill in required fields (only Sponsor field requires valid data; type 1 for suggestion) -> Save and Continue.
+     * 2) Left menu: Questionnaire.
+     * 3) Header: Data Validation.
+     * 4) Data Validation -> Turn On.
+     * 5) Left menu: Key Personnel -> Personnel -> Add Personnel.
+     * 6) Perform search.
+     * 7) Select first (default) option -> Continue.
+     * 8) Select first (default) option -> Add Person
+     */
     @Test
-    public void testCoeusProposalQuestionnaire() throws Exception {
+    public void testCoeusProposalPerformance() throws Exception {
         loginToCoeus();
 
-        createNewProposal();
+        for (int count=0; count<3; count++){
 
-//      Choose Questionnaire tab
-        driver.findElement(By.id("u79gejz")).click();
+            createNewProposal();
 
-        waitForTextPresent("Generic Demo Questionnaire");
+//          Choose Questionnaire tab
+            driver.findElement(By.id("u79gejz")).click();
+
+            waitForTextPresent("Generic Demo Questionnaire");
+
+//          Set Data Validation On
+            driver.findElement(By.id("u19btjw4")).click();
+            waitForTextPresent("Data Validation is currently off");
+            driver.findElement(By.id("u5rzhdu")).click();
+            driver.findElement(By.id("utu858d")).click();
+
+//          Key Personnel
+            driver.findElement(By.id("u1sp7yfb")).click();
+            driver.findElement(By.id("u3s0ej9")).click();
+            driver.findElement(By.id("u18fzd9v")).click();
+            driver.findElement(By.id("u9iouos")).click();
+            driver.findElement(By.id("uouorvl_line98_control_0")).click();
+            driver.findElement(By.id("u1s266pn")).click();
+            driver.findElement(By.id("u1bkjgre")).click();
+            driver.findElement(By.id("u8f37v6")).click();
+        }
+
         passed();
     }
 
