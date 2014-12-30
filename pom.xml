@@ -28,6 +28,8 @@
   <properties>
     <stests.includes>**/*AFT.java</stests.includes>
     <stests.skip>false</stests.skip>
+    <gmaven.test.compile.phase>test-compile</gmaven.test.compile.phase>
+    <plugin.gmaven.version>1.5</plugin.gmaven.version>
   </properties>
 
     <build>
@@ -59,6 +61,17 @@
 
         <plugins>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <fork>true</fork>
+                    <meminitial>256</meminitial>
+                    <maxmem>1024</maxmem>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.2.1.v20140609</version>
@@ -77,6 +90,7 @@
             <groupId>org.kuali.rice</groupId>
             <artifactId>rice-tools-test</artifactId>
             <version>2.5.1-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -87,11 +101,8 @@
     <id>stests</id>
     <properties>
       <maven.failsafe.skip>${stests.skip}</maven.failsafe.skip>
-      <maven.failsafe.includes>${stests.includes}</maven.failsafe.includes>
-      <maven.failsafe.includes.file>classpath:org.kuali.rice.qa.CoeusProposalSubmissionAFT.java</maven.failsafe.includes.file>
-      <maven.failsafe.excludes>${stests.excludes}</maven.failsafe.excludes>
-      <maven.failsafe.excludes.file>${stests.excludes.file}</maven.failsafe.excludes.file>
-      <maven.failsafe.forkedProcessTimeoutInSeconds>${stests.failsafe.timeout}</maven.failsafe.forkedProcessTimeoutInSeconds>
+      <maven.failsafe.includes>**/*AFT.java</maven.failsafe.includes>
+
     </properties>
     <build>
         <resources>
@@ -119,20 +130,23 @@
             </resource>
         </resources>
       <plugins>
-        <plugin>
+          <plugin>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>3.2</version>
+              <configuration>
+                  <fork>true</fork>
+                  <meminitial>256</meminitial>
+                  <maxmem>1024</maxmem>
+                  <source>1.7</source>
+                  <target>1.7</target>
+              </configuration>
+          </plugin>
+
+          <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>selenium-maven-plugin</artifactId>
           <version>2.3</version>
           <executions>
-            <!--
-              <execution>
-              <id>xvfb</id>
-              <phase>pre-integration-test</phase>
-              <goals>
-              <goal>xvfb</goal>
-              </goals>
-              </execution>
-            -->
             <execution>
               <id>start-selenium-server</id>
               <phase>pre-integration-test</phase>
